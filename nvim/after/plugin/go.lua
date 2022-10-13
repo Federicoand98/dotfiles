@@ -1,0 +1,15 @@
+require('go').setup({
+  go = "go",
+  goimport = "gopls",
+  fillstruct = "gopls",
+  gofmt = "gofumpt",
+  max_line_len = 120,
+  tag_transform = false,
+  test_template = "",
+  test_template_dir = "",
+  comment_placeholder = "",
+  verbose = false,
+  lsp_cfg = true,
+  lsp_gofumpt = false,
+  lsp_diag_underline = false,
+})

@@ -48,4 +48,5 @@ packer.startup(function(use)
     'ray-x/go.nvim',
     requires = { 'ray-x/guihua.lua' }
   }
+  use 'akinsho/nvim-toggleterm.lua'
 end)

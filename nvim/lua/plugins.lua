@@ -49,4 +49,8 @@ packer.startup(function(use)
     requires = { 'ray-x/guihua.lua' }
   }
   use 'akinsho/nvim-toggleterm.lua'
+  use {
+    "folke/todo-comments.nvim",
+    requires = "nvim-lua/plenary.nvim",
+  }
 end)

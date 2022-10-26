@@ -111,3 +111,34 @@ git_clone_nvim_config() {
     cp "$temp"/dotfiles/install.sh "$nvim_config_path"
     rm -r "$temp"
 }
+
+main() {
+    check_prerequisite
+    get_os
+
+    if [[ $OS == "linux" ]]; then
+        get_linux_distro
+
+        local common_packages="git curl gip tar unzip"
+
+        if [[ $LINUX_DISTRIBUTION == "debian" || $LINUX_DISTRIBUTION == "ubuntu" ]]; then
+            log "Running on debian based system"
+            sudo apt-get update
+            sudo apt-get install build-essential $common_packages
+            install_brew
+            install_nvim_dependencies
+            install_nvim_head
+            git_clone_nvim_config
+        elif [[ $LINUX_DISTRIBUTION == "arch" ]]; then
+            # todo
+        fi
+    elif [[ $OS == "apple" ]]; then
+        log "Running on macos system"
+        install_brew
+        install_nvim_dependencies
+        install_nvim_head
+        git_clone_nvim_config
+    fi
+}
+
+main

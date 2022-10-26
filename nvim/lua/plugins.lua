@@ -36,6 +36,7 @@ packer.startup(function(use)
   use 'MunifTanjim/prettier.nvim'
   use 'lewis6991/gitsigns.nvim'
   use 'rcarriga/nvim-notify'
+  use 'simrat39/symbols-outline.nvim'
   use {
     'mfussenegger/nvim-dap',
     requires = {
@@ -52,5 +53,9 @@ packer.startup(function(use)
   use {
     "folke/todo-comments.nvim",
     requires = "nvim-lua/plenary.nvim",
+  }
+  use {
+    'TimUntersberger/neogit',
+    requires = 'nvim-lua/plenary.nvim'
   }
 end)

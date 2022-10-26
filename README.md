@@ -10,11 +10,9 @@
     <a href="https://github.com/Federicoand98/nvim/issues">
       <img src="https://img.shields.io/github/issues/Federicoand98/nvim.svg?style=flat-square&label=Issues&color=F05F40" alt="Github issues"/>
     </a>
-    <a href="https://github.com/Federicoand98/nvim/actions/workflows/ci.yml">
-      <img src="https://github.com/Federicoand98/nvim/actions/workflows/ci.yml/badge.svg" alt="CI Status"/>
-    </a>
     <a href="https://github.com/Federicoand98/nvim/blob/main/LICENSE">
       <img src="https://img.shields.io/github/license/Federicoand98/nvim?style=flat-square&logo=MIT&label=License" alt="License"/>
     </a>
   </p>
 </div>
+

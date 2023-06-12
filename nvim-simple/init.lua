@@ -83,8 +83,10 @@ require('lazy').setup({
 
       -- Useful status updates for LSP
       -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
-      { 'j-hui/fidget.nvim', opts = {} },
-
+      {
+        'j-hui/fidget.nvim',
+        tag = "legacy",
+      },
       -- Additional lua configuration, makes nvim stuff amazing!
       'folke/neodev.nvim',
     },
@@ -218,6 +220,15 @@ require('lazy').setup({
     ft = {"go", 'gomod'},
     build = ':lua require("go.install").update_all_sync()' -- if you need to install/update all binaries
   },
+  {
+    "kdheepak/lazygit.nvim",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+    },
+  },
+  {
+    'akinsho/toggleterm.nvim', version = '*', config = true,
+  },
   "windwp/nvim-autopairs",
   'ThePrimeagen/vim-be-good'
 
@@ -305,6 +316,10 @@ vim.keymap.set('', 'sl', '<C-w>l')
 
 -- Open explore
 vim.keymap.set('n', '<leader>e', ':Explore<Return>')
+-- Open Dashboard
+vim.keymap.set('n', '<leader>o', ':Dashboard<Return>')
+-- Open Lazygit
+vim.keymap.set('n', '<leader>lg', ':LazyGit<Return>')
 
 -- [[ Highlight on yank ]]
 -- See `:help vim.highlight.on_yank()`
@@ -605,8 +620,24 @@ local db = require('dashboard')
   db.setup({
     theme = 'hyper',
     config = {
-      week_header = {
-       enable = true,
+      header = {
+        '',
+        '    ⢰⣧⣼⣯⠄⣸⣠⣶⣶⣦⣾⠄⠄⠄⠄⡀⠄⢀⣿⣿⠄⠄⠄⢸⡇⠄⠄ ',
+        '    ⣾⣿⠿⠿⠶⠿⢿⣿⣿⣿⣿⣦⣤⣄⢀⡅⢠⣾⣛⡉⠄⠄⠄⠸⢀⣿⠄ ',
+        '   ⢀⡋⣡⣴⣶⣶⡀⠄⠄⠙⢿⣿⣿⣿⣿⣿⣴⣿⣿⣿⢃⣤⣄⣀⣥⣿⣿⠄ ',
+        '   ⢸⣇⠻⣿⣿⣿⣧⣀⢀⣠⡌⢻⣿⣿⣿⣿⣿⣿⣿⣿⣿⠿⠿⠿⣿⣿⣿⠄ ',
+        '  ⢀⢸⣿⣷⣤⣤⣤⣬⣙⣛⢿⣿⣿⣿⣿⣿⣿⡿⣿⣿⡍⠄⠄⢀⣤⣄⠉⠋⣰ ',
+        '  ⣼⣖⣿⣿⣿⣿⣿⣿⣿⣿⣿⢿⣿⣿⣿⣿⣿⢇⣿⣿⡷⠶⠶⢿⣿⣿⠇⢀⣤ ',
+        ' ⠘⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣽⣿⣿⣿⡇⣿⣿⣿⣿⣿⣿⣷⣶⣥⣴⣿⡗ ',
+        ' ⢀⠈⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡟  ',
+        ' ⢸⣿⣦⣌⣛⣻⣿⣿⣧⠙⠛⠛⡭⠅⠒⠦⠭⣭⡻⣿⣿⣿⣿⣿⣿⣿⣿⡿⠃  ',
+        ' ⠘⣿⣿⣿⣿⣿⣿⣿⣿⡆⠄⠄⠄⠄⠄⠄⠄⠄⠹⠈⢋⣽⣿⣿⣿⣿⣵⣾⠃  ',
+        '  ⠘⣿⣿⣿⣿⣿⣿⣿⣿⠄⣴⣿⣶⣄⠄⣴⣶⠄⢀⣾⣿⣿⣿⣿⣿⣿⠃   ',
+        '   ⠈⠻⣿⣿⣿⣿⣿⣿⡄⢻⣿⣿⣿⠄⣿⣿⡀⣾⣿⣿⣿⣿⣛⠛⠁    ',
+        '     ⠈⠛⢿⣿⣿⣿⠁⠞⢿⣿⣿⡄⢿⣿⡇⣸⣿⣿⠿⠛⠁      ',
+        '        ⠉⠻⣿⣿⣾⣦⡙⠻⣷⣾⣿⠃⠿⠋⠁     ⢀⣠⣴ ',
+        ' ⣿⣿⣿⣶⣶⣮⣥⣒⠲⢮⣝⡿⣿⣿⡆⣿⡿⠃⠄⠄⠄⠄⠄⠄⠄⣠⣴⣿⣿⣿ ',
+        '',
       },
       shortcut = {
         { desc = '󰊳 Update', group = '@property', action = 'Lazy update', key = 'u' },
@@ -641,6 +672,57 @@ local db = require('dashboard')
       },
     },
   })
+
+-- [[ ToggleTerm setup ]]
+local map = vim.api.nvim_set_keymap
+local buf_map = vim.api.nvim_buf_set_keymap
+
+require("toggleterm").setup({
+  size = function (term)
+    if term.direction == "horizontal" then
+      return 15
+    elseif term.direction == "vertical" then
+      return vim.o.columns * 0.4
+    end
+  end,
+  open_mapping = "<C-n>",
+  hide_numbers = true,
+  shade_filetypes = {},
+  shade_terminals = true,
+  shading_factor = "1",
+  start_in_insert = true,
+  insert_mappings = true,
+  persist_size = true,
+  direction = "float", -- vertical, horizontal, window, floatl
+  close_on_exit = true,
+  shell = vim.o.shell,
+  float_opts = {
+    border = "curved", -- single, double, shadow, curved
+    winblend = 8,
+    highlights = {
+      border = "Normal",
+      background = "Normal",
+    },
+  },
+})
+
+map("t", "<ESC>", "<C-\\><C-n>", { noremap = true, silent = true })
+
+local set_terminal_keymap = function()
+  local opts = { noremap = true }
+  buf_map(0, "t", "<esc>", [[<C-\><C-n>]], opts)
+end
+
+vim.api.nvim_create_autocmd("TermOpen", {
+  pattern = "term://*",
+  callback = function()
+    set_terminal_keymap()
+  end,
+  desc = "Mappings for navigation with a terminal"
+})
+
+-- [[ Lazygit setup ]]
+
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et

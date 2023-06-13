@@ -48,4 +48,5 @@ This setup works perfectly on my macOS and has been tested on my Ubuntu.
 ## Installation
 For the installation you can use the [install.sh](install.sh). Now it works on debian/ubuntu and macos systems. Or simply you can install nvim manually and copy all the configurations in your nvim folder.
 
+
 USE AT YOUR OWN RISK!
